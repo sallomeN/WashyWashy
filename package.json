@@ -1,7 +1,7 @@
 {
   "name": "washywashy",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "expo-router/entry",
   "dependencies": {
     "@react-native-async-storage/async-storage": "^3.1.0",
     "expo": "~56.0.4",
@@ -15,6 +15,12 @@
     "react-i18next": "^17.0.8",
     "react-native": "0.85.3",
     "react-native-svg": "^15.15.4"
+  },
+  "expo": {
+    "scheme": "your-app-scheme",
+    "experiments": {
+      "typedRoutes": true
+    }
   },
   "scripts": {
     "start": "expo start",

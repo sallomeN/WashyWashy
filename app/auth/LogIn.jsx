@@ -17,9 +17,8 @@ import AuthButton from "../../components/AuthButton";
 import SocialAuthButtons from "../../components/SocialAuthButtons";
 import LanguageSwitch from "../../components/LanguageSwitch";
 
-
-import Email from "../../assets/icons/EmailIcon";
-import Lock from "../../assets/icons/LockIcon";
+import Email from "../../assets/icons/Email";
+import Lock from "../../assets/icons/Lock";
 import LightLogo from "../../assets/images/LightLogo";
 import DarkLogo from "../../assets/images/DarkLogo";
 import Apple from "../../assets/icons/Apple";
