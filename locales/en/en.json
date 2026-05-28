@@ -1,0 +1,49 @@
+{
+  "login": {
+    "title": "Welcome back!",
+    "subtitle": "Sign in to your account",
+    "email": "Enter your email",
+    "password": "Enter your password",
+    "forgotPassword": "Forgot password?",
+    "button": "Sign In",
+    "or": "or",
+    "apple": "Sign in with Apple",
+    "google": "Sign in with Google",
+    "noAccount": "Don't have an account?",
+    "register": "Register"
+  },
+  "register": {
+    "title": "Create Account",
+    "subtitle": "Register to get started",
+    "name": "Enter your name",
+    "email": "Enter your email",
+    "password": "Create password",
+    "confirmPassword": "Confirm your password",
+    "terms": "I agree to the Terms, Privacy Policy and Confidentiality Policy.",
+    "button": "Register",
+    "or": "or",
+    "apple": "Sign in with Apple",
+    "google": "Sign in with Google",
+    "hasAccount": "Already have an account?",
+    "login": "Sign In"
+  },
+  "forgotPassword": {
+    "title": "Forgot Password",
+    "subtitle": "Enter your email to reset",
+    "email": "Enter your email",
+    "button": "Send Reset Link",
+    "back": "Back to Sign In",
+    "success": "Reset link sent! Check your email.",
+    "successSub": "Check your email inbox"
+  },
+  "errors": {
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email",
+    "passwordRequired": "Password is required",
+    "passwordShort": "Password must be at least 6 characters",
+    "nameRequired": "Name is required",
+    "passwordMatch": "Passwords do not match",
+    "termsRequired": "Please accept the terms",
+    "generic": "Something went wrong. Please try again."
+  }
+}
