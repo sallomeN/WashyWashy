@@ -14,7 +14,7 @@
     "react": "19.2.3",
     "react-i18next": "^17.0.8",
     "react-native": "0.85.3",
-    "react-native-svg": "^15.15.4"
+    "react-native-svg": "15.15.4"
   },
   "expo": {
     "scheme": "your-app-scheme",

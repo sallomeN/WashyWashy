@@ -17,12 +17,12 @@ import AuthButton from "../../components/AuthButton";
 import SocialAuthButtons from "../../components/SocialAuthButtons";
 import LanguageSwitch from "../../components/LanguageSwitch";
 
-import Email from "../../assets/icons/Email";
-import Lock from "../../assets/icons/Lock";
-import LightLogo from "../../assets/images/LightLogo";
-import DarkLogo from "../../assets/images/DarkLogo";
-import Apple from "../../assets/icons/Apple";
-import Google from "../../assets/icons/Google";
+import Email from "../../assets/icons/Email.svg";
+import Lock from "../../assets/icons/Lock.svg";
+import LightLogo from "../../assets/images/LightLogo.svg";
+import DarkLogo from "../../assets/images/DarkLogo.svg";
+import Apple from "../../assets/icons/Apple.svg";
+import Google from "../../assets/icons/Google.svg";
 
 export default function LogIn() {
   const { t } = useTranslation();
