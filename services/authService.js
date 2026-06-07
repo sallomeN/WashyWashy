@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // e.g. "http://192.168.1.100:5000/api/auth"
 // For emulator use "http://10.0.2.2:5000/api/auth" (Android)
 // For simulator use "http://localhost:5000/api/auth" (iOS)
-const BASE_URL = "http://10.0.2.2:5000/api/auth";
+const BASE_URL = "http://192.168.1.95:5000/api/auth";
 
 const TOKEN_KEY = "auth_token";
 const USER_KEY = "auth_user";

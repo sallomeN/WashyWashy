@@ -24,41 +24,21 @@ import DarkLogo from "../../assets/images/DarkLogo.svg";
 import Apple from "../../assets/icons/Apple.svg";
 import Google from "../../assets/icons/Google.svg";
 
+import { Formik } from "formik";
+import * as Yup from "yup";
+
+const LoginSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  password: Yup.string().required("Password is required"),
+});
+
 export default function LogIn() {
   const { t } = useTranslation();
   const { colors, isDark } = useTheme();
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
 
-  const validate = () => {
-    const e = {};
-    if (!email.trim()) e.email = t("errors.emailRequired");
-    else if (!/^\S+@\S+\.\S+$/.test(email)) e.email = t("errors.emailInvalid");
-    if (!password) e.password = t("errors.passwordRequired");
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  };
-
-  const handleLogin = async () => {
-    setApiError("");
-    if (!validate()) return;
-    setLoading(true);
-    try {
-      await loginUser({ email: email.trim(), password });
-      router.replace("/(tabs)/(home)");
-    } catch (err) {
-      setApiError(err.message || t("errors.generic"));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  
   const Logo = isDark ? DarkLogo : LightLogo;
 
   return (
@@ -74,71 +54,85 @@ export default function LogIn() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-      
         <View style={styles.logoContainer}>
           <Logo width={160} height={80} />
-          {/* <View style={{ width: 160, height: 80 }}><Logo /></View> */}
         </View>
 
-   
         <Text style={[styles.title, { color: colors.text }]}>
           {t("login.title")}
         </Text>
+
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
           {t("login.subtitle")}
         </Text>
 
-   
         <View style={styles.langRow}>
           <LanguageSwitch />
         </View>
 
-  
-        <AuthInput
-          icon={Email}
-          placeholder={t("login.email")}
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          error={errors.email}
-        />
-
-        <AuthInput
-          icon={Lock}
-          placeholder={t("login.password")}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          error={errors.password}
-        />
-
-
-        <TouchableOpacity
-          style={styles.forgotRow}
-          onPress={() => router.push("/auth/ForgotPassword")}
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          validationSchema={LoginSchema}
+          onSubmit={async (values, { setSubmitting }) => {
+            try {
+              setApiError("");
+              await loginUser({
+                email: values.email.trim(),
+                password: values.password,
+              });
+              router.replace("/(tabs)/(home)");
+            } catch (err) {
+              setApiError(err.message || t("errors.generic"));
+            } finally {
+              setSubmitting(false);
+            }
+          }}
         >
-          <Text style={[styles.forgotText, { color: colors.primary }]}>
-            {t("login.forgotPassword")}
-          </Text>
-        </TouchableOpacity>
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+            isSubmitting,
+          }) => (
+            <>
+              <AuthInput
+                icon={Email}
+                placeholder={t("login.email")}
+                value={values.email}
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
+                error={touched.email && errors.email}
+              />
 
+              <AuthInput
+                icon={Lock}
+                placeholder={t("login.password")}
+                value={values.password}
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                secureTextEntry
+                error={touched.password && errors.password}
+              />
 
-        {apiError ? (
-          <Text style={[styles.apiError, { color: colors.error }]}>
-            {apiError}
-          </Text>
-        ) : null}
+              {apiError ? (
+                <Text style={[styles.apiError, { color: colors.error }]}>
+                  {apiError}
+                </Text>
+              ) : null}
 
-
-        <AuthButton
-          title={t("login.button")}
-          onPress={handleLogin}
-          loading={loading}
-        />
-
+              <AuthButton
+                title={t("login.button")}
+                onPress={handleSubmit}
+                loading={isSubmitting}
+              />
+            </>
+          )}
+        </Formik>
 
         <SocialAuthButtons type="login" appleIcon={Apple} googleIcon={Google} />
-
 
         <View style={styles.bottomRow}>
           <Text style={[styles.bottomText, { color: colors.textSecondary }]}>
@@ -177,14 +171,6 @@ const styles = StyleSheet.create({
   },
   langRow: {
     marginBottom: 20,
-  },
-  forgotRow: {
-    alignSelf: "flex-end",
-    marginBottom: 20,
-    marginTop: 4,
-  },
-  forgotText: {
-    fontSize: 13,
   },
   apiError: {
     fontSize: 13,

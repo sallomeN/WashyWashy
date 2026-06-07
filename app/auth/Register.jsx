@@ -17,51 +17,27 @@ import AuthButton from "../../components/AuthButton";
 import SocialAuthButtons from "../../components/SocialAuthButtons";
 import LanguageSwitch from "../../components/LanguageSwitch";
 
-// import UserIcon from "../../assets/icons/UserIcon";
-// import EmailIcon from "../../assets/icons/EmailIcon";
-// import LockIcon from "../../assets/icons/LockIcon";
+import { Formik } from "formik";
+import * as Yup from "yup";
+
+const RegisterSchema = Yup.object().shape({
+  name: Yup.string().required("Name is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  password: Yup.string()
+    .min(6, "Min 6 characters")
+    .required("Password required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password")], "Passwords do not match")
+    .required("Confirm password required"),
+  agreed: Yup.boolean().oneOf([true], "You must accept terms"),
+});
 
 export default function Register() {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const router = useRouter();
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [agreed, setAgreed] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
-
-  const validate = () => {
-    const e = {};
-    if (!name.trim()) e.name = t("errors.nameRequired");
-    if (!email.trim()) e.email = t("errors.emailRequired");
-    else if (!/^\S+@\S+\.\S+$/.test(email)) e.email = t("errors.emailInvalid");
-    if (!password) e.password = t("errors.passwordRequired");
-    else if (password.length < 6) e.password = t("errors.passwordShort");
-    if (password !== confirmPassword)
-      e.confirmPassword = t("errors.passwordMatch");
-    if (!agreed) e.terms = t("errors.termsRequired");
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  };
-
-  const handleRegister = async () => {
-    setApiError("");
-    if (!validate()) return;
-    setLoading(true);
-    try {
-      await registerUser({ name: name.trim(), email: email.trim(), password });
-      router.replace("/(tabs)/(home)");
-    } catch (err) {
-      setApiError(err.message || t("errors.generic"));
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <KeyboardAvoidingView
@@ -74,22 +50,17 @@ export default function Register() {
           { backgroundColor: colors.background },
         ]}
         keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
       >
-       
         <View style={styles.logoContainer}>
-          <View
-            style={[styles.logoPlaceholder, { borderColor: colors.primary }]}
-          >
-            <Text style={[styles.logoText, { color: colors.primary }]}>
-              WashyWashy
-            </Text>
-          </View>
+          <Text style={[styles.logoText, { color: colors.primary }]}>
+            WashyWashy
+          </Text>
         </View>
 
         <Text style={[styles.title, { color: colors.text }]}>
           {t("register.title")}
         </Text>
+
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
           {t("register.subtitle")}
         </Text>
@@ -98,92 +69,121 @@ export default function Register() {
           <LanguageSwitch />
         </View>
 
-        <AuthInput
-          // icon={UserIcon}
-          placeholder={t("register.name")}
-          value={name}
-          onChangeText={setName}
-          autoCapitalize="words"
-          error={errors.name}
-        />
+        <Formik
+          initialValues={{
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            agreed: false,
+          }}
+          validationSchema={RegisterSchema}
+          onSubmit={async (values, { setSubmitting }) => {
+            try {
+              setApiError("");
+              await registerUser({
+                name: values.name.trim(),
+                email: values.email.trim(),
+                password: values.password,
+              });
 
-        <AuthInput
-          // icon={EmailIcon}
-          placeholder={t("register.email")}
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          error={errors.email}
-        />
-
-        <AuthInput
-          // icon={LockIcon}
-          placeholder={t("register.password")}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          error={errors.password}
-        />
-
-        <AuthInput
-          // icon={LockIcon}
-          placeholder={t("register.confirmPassword")}
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-          error={errors.confirmPassword}
-        />
-
-     
-        <TouchableOpacity
-          style={styles.termsRow}
-          onPress={() => setAgreed(!agreed)}
-          activeOpacity={0.7}
+              router.replace("/(tabs)/(home)");
+            } catch (err) {
+              setApiError(err.message || t("errors.generic"));
+            } finally {
+              setSubmitting(false);
+            }
+          }}
         >
-          <View
-            style={[
-              styles.checkbox,
-              {
-                borderColor: colors.checkboxBorder,
-                backgroundColor: agreed ? colors.checkboxFill : "transparent",
-              },
-            ]}
-          >
-            {agreed && (
-              <Text
-                style={{
-                  color: colors.checkboxCheck,
-                  fontSize: 11,
-                  fontWeight: "700",
-                }}
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            setFieldValue,
+            values,
+            errors,
+            touched,
+            isSubmitting,
+          }) => (
+            <>
+              <AuthInput
+                placeholder={t("register.name")}
+                value={values.name}
+                onChangeText={handleChange("name")}
+                onBlur={handleBlur("name")}
+                error={touched.name && errors.name}
+              />
+
+              <AuthInput
+                placeholder={t("register.email")}
+                value={values.email}
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
+                error={touched.email && errors.email}
+              />
+
+              <AuthInput
+                placeholder={t("register.password")}
+                value={values.password}
+                onChangeText={handleChange("password")}
+                secureTextEntry
+                error={touched.password && errors.password}
+              />
+
+              <AuthInput
+                placeholder={t("register.confirmPassword")}
+                value={values.confirmPassword}
+                onChangeText={handleChange("confirmPassword")}
+                secureTextEntry
+                error={touched.confirmPassword && errors.confirmPassword}
+              />
+
+              {/* checkbox */}
+              <TouchableOpacity
+                style={styles.termsRow}
+                onPress={() => setFieldValue("agreed", !values.agreed)}
               >
-                ✓
-              </Text>
-            )}
-          </View>
-          <Text
-            style={[
-              styles.termsText,
-              {
-                color: errors.terms ? colors.error : colors.textSecondary,
-              },
-            ]}
-          >
-            {t("register.terms")}
-          </Text>
-        </TouchableOpacity>
+                <View
+                  style={[
+                    styles.checkbox,
+                    {
+                      borderColor: colors.checkboxBorder,
+                      backgroundColor: values.agreed
+                        ? colors.checkboxFill
+                        : "transparent",
+                    },
+                  ]}
+                >
+                  {values.agreed && <Text>✓</Text>}
+                </View>
 
-        {apiError ? (
-          <Text style={[styles.apiError, { color: colors.error }]}>
-            {apiError}
-          </Text>
-        ) : null}
+                <Text
+                  style={[styles.termsText, { color: colors.textSecondary }]}
+                >
+                  {t("register.terms")}
+                </Text>
+              </TouchableOpacity>
 
-        <AuthButton
-          title={t("register.button")}
-          onPress={handleRegister}
-          loading={loading}
-        />
+              {touched.agreed && errors.agreed ? (
+                <Text style={{ color: colors.error, marginBottom: 10 }}>
+                  {errors.agreed}
+                </Text>
+              ) : null}
+
+              {apiError ? (
+                <Text style={[styles.apiError, { color: colors.error }]}>
+                  {apiError}
+                </Text>
+              ) : null}
+
+              <AuthButton
+                title={t("register.button")}
+                onPress={handleSubmit}
+                loading={isSubmitting}
+              />
+            </>
+          )}
+        </Formik>
 
         <SocialAuthButtons type="register" />
 
@@ -191,6 +191,7 @@ export default function Register() {
           <Text style={[styles.bottomText, { color: colors.textSecondary }]}>
             {t("register.hasAccount")}{" "}
           </Text>
+
           <TouchableOpacity onPress={() => router.push("/auth/LogIn")}>
             <Text style={[styles.linkText, { color: colors.primary }]}>
               {t("register.login")}
@@ -213,16 +214,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 24,
   },
-  logoPlaceholder: {
-    borderWidth: 2,
-    borderRadius: 16,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
   logoText: {
     fontSize: 22,
     fontWeight: "700",
-    letterSpacing: 1,
   },
   title: {
     fontSize: 22,
@@ -238,9 +232,8 @@ const styles = StyleSheet.create({
   },
   termsRow: {
     flexDirection: "row",
-    alignItems: "flex-start",
-    marginBottom: 20,
-    marginTop: 4,
+    alignItems: "center",
+    marginBottom: 10,
   },
   checkbox: {
     width: 20,
@@ -248,14 +241,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 4,
     marginRight: 10,
-    marginTop: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   termsText: {
     flex: 1,
     fontSize: 13,
-    lineHeight: 18,
   },
   apiError: {
     fontSize: 13,
