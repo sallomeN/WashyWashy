@@ -10,13 +10,13 @@ export default function Home() {
 
   const handleLogout = async () => {
     await logoutUser();
-    router.replace("/auth/LogIn");
+    router.replace("/auth");
   };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Text style={[styles.title, { color: colors.text }]}>
-        Welcome to WashyWashy 
+        Welcome to WashyWashy
       </Text>
       <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
         You are logged in!

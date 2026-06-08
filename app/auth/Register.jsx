@@ -86,7 +86,6 @@ export default function Register() {
                 email: values.email.trim(),
                 password: values.password,
               });
-
               router.replace("/(tabs)/(home)");
             } catch (err) {
               setApiError(err.message || t("errors.generic"));
