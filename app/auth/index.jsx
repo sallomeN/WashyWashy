@@ -26,6 +26,7 @@ import Google from "../../assets/icons/Google.svg";
 
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -46,110 +47,122 @@ export default function LogIn() {
       style={{ flex: 1, backgroundColor: colors.background }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <ScrollView
-        contentContainerStyle={[
-          styles.scroll,
-          { backgroundColor: colors.background },
-        ]}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.logoContainer}>
-          <Logo width={160} height={80} />
-        </View>
-
-        <Text style={[styles.title, { color: colors.text }]}>
-          {t("login.title")}
-        </Text>
-
-        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-          {t("login.subtitle")}
-        </Text>
-
-        <View style={styles.langRow}>
-          <LanguageSwitch />
-        </View>
-
-        <Formik
-          initialValues={{ email: "", password: "" }}
-          validationSchema={LoginSchema}
-          onSubmit={async (values, { setSubmitting }) => {
-            try {
-              setApiError("");
-              await loginUser({
-                email: values.email.trim(),
-                password: values.password,
-              });
-              router.replace("/(tabs)/(home)");
-            } catch (err) {
-              setApiError(err.message || t("errors.generic"));
-            } finally {
-              setSubmitting(false);
-            }
-          }}
+      <SafeAreaView contentContainerStyle={[
+            styles.container,
+            { backgroundColor: colors.background },
+          ]} >
+        <ScrollView
+          contentContainerStyle={[
+            styles.scroll,
+            { backgroundColor: colors.background },
+          ]}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            values,
-            errors,
-            touched,
-            isSubmitting,
-          }) => (
-            <>
-              <AuthInput
-                icon={Email}
-                placeholder={t("login.email")}
-                value={values.email}
-                onChangeText={handleChange("email")}
-                onBlur={handleBlur("email")}
-                error={touched.email && errors.email}
-              />
+          <View style={styles.logoContainer}>
+            <Logo width={160} height={80} />
+          </View>
 
-              <AuthInput
-                icon={Lock}
-                placeholder={t("login.password")}
-                value={values.password}
-                onChangeText={handleChange("password")}
-                onBlur={handleBlur("password")}
-                secureTextEntry
-                error={touched.password && errors.password}
-              />
-
-              {apiError ? (
-                <Text style={[styles.apiError, { color: colors.error }]}>
-                  {apiError}
-                </Text>
-              ) : null}
-
-              <AuthButton
-                title={t("login.button")}
-                onPress={handleSubmit}
-                loading={isSubmitting}
-              />
-            </>
-          )}
-        </Formik>
-
-        <SocialAuthButtons type="login" appleIcon={Apple} googleIcon={Google} />
-
-        <View style={styles.bottomRow}>
-          <Text style={[styles.bottomText, { color: colors.textSecondary }]}>
-            {t("login.noAccount")}{" "}
+          <Text style={[styles.title, { color: colors.text }]}>
+            {t("login.title")}
           </Text>
-          <TouchableOpacity onPress={() => router.push("/auth/Register")}>
-            <Text style={[styles.linkText, { color: colors.primary }]}>
-              {t("login.register")}
+
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+            {t("login.subtitle")}
+          </Text>
+
+          <View style={styles.langRow}>
+            <LanguageSwitch />
+          </View>
+
+          <Formik
+            initialValues={{ email: "", password: "" }}
+            validationSchema={LoginSchema}
+            onSubmit={async (values, { setSubmitting }) => {
+              try {
+                setApiError("");
+                await loginUser({
+                  email: values.email.trim(),
+                  password: values.password,
+                });
+                router.replace("/(tabs)/(home)");
+              } catch (err) {
+                setApiError(err.message || t("errors.generic"));
+              } finally {
+                setSubmitting(false);
+              }
+            }}
+          >
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+              isSubmitting,
+            }) => (
+              <>
+                <AuthInput
+                  icon={Email}
+                  placeholder={t("login.email")}
+                  value={values.email}
+                  onChangeText={handleChange("email")}
+                  onBlur={handleBlur("email")}
+                  error={touched.email && errors.email}
+                />
+
+                <AuthInput
+                  icon={Lock}
+                  placeholder={t("login.password")}
+                  value={values.password}
+                  onChangeText={handleChange("password")}
+                  onBlur={handleBlur("password")}
+                  secureTextEntry
+                  error={touched.password && errors.password}
+                />
+
+                {apiError ? (
+                  <Text style={[styles.apiError, { color: colors.error }]}>
+                    {apiError}
+                  </Text>
+                ) : null}
+
+                <AuthButton
+                  title={t("login.button")}
+                  onPress={handleSubmit}
+                  loading={isSubmitting}
+                />
+              </>
+            )}
+          </Formik>
+
+          <SocialAuthButtons
+            type="login"
+            appleIcon={Apple}
+            googleIcon={Google}
+          />
+
+          <View style={styles.bottomRow}>
+            <Text style={[styles.bottomText, { color: colors.textSecondary }]}>
+              {t("login.noAccount")}{" "}
             </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+            <TouchableOpacity onPress={() => router.push("/auth/Register")}>
+              <Text style={[styles.linkText, { color: colors.primary }]}>
+                {t("login.register")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   scroll: {
     flexGrow: 1,
     paddingHorizontal: 24,

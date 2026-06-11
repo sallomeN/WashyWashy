@@ -42,7 +42,7 @@ export default function AuthInput({
       >
         {IconComponent && (
           <View style={styles.iconLeft}>
-            <IconComponent color={colors.inputIcon} size={20} />
+            <IconComponent fill={colors.inputIcon} size={20} />
           </View>
         )}
 
@@ -58,7 +58,6 @@ export default function AuthInput({
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
         />
-
 
         {isPassword && (
           <TouchableOpacity

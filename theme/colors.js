@@ -23,7 +23,7 @@ export const darkTheme = {
   inputBorderFocus: "#5694E0",
   inputText: "#FFFFFF",
   inputPlaceholder: "#6B8A9A",
-  inputIcon: "#5694E0",
+  inputIcon: "#FFFFFF",
 
   // Buttons
   buttonPrimary: "#5694E0",
@@ -57,11 +57,14 @@ export const darkTheme = {
   // Status
   error: "#FF6B6B",
   success: "#4CAF50",
+
+  //loginicons
+  icon: "FFFFFF",
 };
 
 export const lightTheme = {
   // Backgrounds
-  background: "#F0F6FF",
+  background: "#FFFFFF",
   backgroundSecondary: "#E4EFFF",
   card: "#FFFFFF",
 
@@ -81,7 +84,7 @@ export const lightTheme = {
   inputBorderFocus: "#5694E0",
   inputText: "#002633",
   inputPlaceholder: "#9ab8c8",
-  inputIcon: "#5694E0",
+  inputIcon: "#002633",
 
   // Buttons
   buttonPrimary: "#5694E0",
