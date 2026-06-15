@@ -177,10 +177,12 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "700",
     marginBottom: 4,
+    textAlign: "center",
   },
   subtitle: {
     fontSize: 14,
     marginBottom: 20,
+    textAlign: "center",
   },
   langRow: {
     marginBottom: 20,

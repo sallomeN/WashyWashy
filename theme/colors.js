@@ -10,7 +10,7 @@ export const darkTheme = {
   // Text
   text: "#FFFFFF",
   textSecondary: "#A0B8C8",
-  textMuted: "#6B8A9A",
+  textMuted: "#FFFFFF",
 
   // Brand
   primary: "#5694E0",
@@ -71,10 +71,10 @@ export const lightTheme = {
   // Text
   text: "#002633",
   textSecondary: "#3a5f73",
-  textMuted: "#7a9aaa",
+  textMuted: "#002633",
 
   // Brand
-  primary: "#5694E0",
+  primary: "#002633",
   primaryDark: "#3a7acc",
   primaryLight: "#7ab0e8",
 
@@ -87,7 +87,7 @@ export const lightTheme = {
   inputIcon: "#002633",
 
   // Buttons
-  buttonPrimary: "#5694E0",
+  buttonPrimary: "#002633",
   buttonPrimaryText: "#FFFFFF",
   buttonSecondary: "#FFFFFF",
   buttonSecondaryText: "#002633",

@@ -7,6 +7,10 @@ import {
   StyleSheet,
 } from "react-native";
 import { useTheme } from "../context/ThemeContext";
+import HidePassLight from "../assets/icons/HideLight.svg";
+import ViewPassLight from "../assets/icons/ViewLight.svg";
+import HidePassDark from "../assets/icons/HideDark.svg";
+import ViewPassDark from "../assets/icons/ViewDark.svg";
 
 //  SVG importingfrom assets/icons/
 // <AuthInput icon={EmailIcon} />
@@ -20,10 +24,12 @@ export default function AuthInput({
   autoCapitalize = "none",
   error,
 }) {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const [focused, setFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = secureTextEntry;
+  const EyeOpenIcon = isDark ? ViewPassLight : ViewPassDark;
+  const EyeClosedIcon = isDark ? HidePassLight : HidePassDark;
 
   return (
     <View style={styles.wrapper}>
@@ -35,8 +41,8 @@ export default function AuthInput({
             borderColor: error
               ? colors.error
               : focused
-              ? colors.inputBorderFocus
-              : colors.inputBorder,
+                ? colors.inputBorderFocus
+                : colors.inputBorder,
           },
         ]}
       >
@@ -64,9 +70,12 @@ export default function AuthInput({
             style={styles.iconRight}
             onPress={() => setShowPassword(!showPassword)}
           >
-            <Text style={{ color: colors.textMuted, fontSize: 12 }}>
-              {showPassword ? "HIDE" : "SHOW"}
-            </Text>
+            <TouchableOpacity
+              style={styles.iconRight}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}
+            </TouchableOpacity>
           </TouchableOpacity>
         )}
       </View>
